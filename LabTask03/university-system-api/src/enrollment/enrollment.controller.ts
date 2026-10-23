@@ -11,7 +11,10 @@ export class EnrollmentController {
   }
 
   @Post()
-  getEnrollments(@Body() studentName: string, courseId: string) {
-    return this.enrollmentService.getEnrollments(studentName, courseId);
+  getEnrollments(@Body() body: { studentName: string; courseId: string }) {
+    return this.enrollmentService.getEnrollments(
+      body.studentName,
+      body.courseId,
+    );
   }
 }

@@ -9,6 +9,7 @@ export class NotificationService {
   ) {}
 
   sendNotification(studentName: string, message: string) {
+    //  console.log('Check Notification');
     return [{ message: message, name: studentName }];
   }
 

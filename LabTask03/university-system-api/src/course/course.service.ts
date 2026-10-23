@@ -18,6 +18,7 @@ export class CourseService {
 
   getCourseById(id: string) {
     //  console.log('ID: ' + id);
+    //  console.log('Checking');
     return [
       {
         message: 'Course fetched',
@@ -32,8 +33,8 @@ export class CourseService {
         message: 'Course created',
         data: [
           {
-            name: name,
-            code: code,
+            CourseName: name,
+            CourseCode: code,
           },
         ],
       },

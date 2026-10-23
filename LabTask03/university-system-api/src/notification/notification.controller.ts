@@ -6,15 +6,20 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
   @Post('/send')
-  sendNotification(@Body() studentName: string, message: string) {
-    return this.notificationService.sendNotification(studentName, message);
+  sendNotification(@Body() body: { studentName: string; message: string }) {
+    return this.notificationService.sendNotification(
+      body.studentName,
+      body.message,
+    );
   }
 
   @Post('/check')
-  checkEnrollmentAndNotify(@Body() studentName: string, courseId: string) {
+  checkEnrollmentAndNotify(
+    @Body() body: { studentName: string; courseId: string },
+  ) {
     return this.notificationService.checkEnrollmentAndNotify(
-      studentName,
-      courseId,
+      body.studentName,
+      body.courseId,
     );
   }
 }

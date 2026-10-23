@@ -21,15 +21,21 @@ export class EnrollmentService {
   }
 
   getEnrollments(studentName: string, courseId: string) {
+    const enrollment = {
+      name: studentName,
+      course: this.courseService.getCourseById(courseId),
+    };
+
+    const notification = this.notificationService.sendNotification(
+      studentName,
+      'Details fetched successfully',
+    );
+
     return [
       {
         message: 'All enrollments fetched',
-        data: [
-          {
-            name: studentName,
-            courseId: courseId,
-          },
-        ],
+        data: [enrollment],
+        notification: notification,
       },
     ];
   }
