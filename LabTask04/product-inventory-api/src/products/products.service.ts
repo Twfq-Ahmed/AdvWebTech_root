@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Products } from './entities/products.entity.js';
-import { Repository } from 'typeorm';
+import { CreateDateColumn, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto.js';
 
 @Injectable()
@@ -39,6 +39,10 @@ export class ProductsService {
         price: true,
         stock: true,
         category: true,
+      },
+
+      order: {
+        createdAt: 'DESC',
       },
     });
 
