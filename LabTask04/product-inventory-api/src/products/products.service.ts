@@ -48,4 +48,31 @@ export class ProductsService {
       products: products,
     };
   }
+
+  async findOneProduct(
+    id: number,
+  ): Promise<{ message: string; product: Products } | string> {
+    const product = await this.productsRepo.findOne({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        price: true,
+        stock: true,
+        category: true,
+      },
+    });
+
+    if (product) {
+      return {
+        message: `Product with id ${id} found`,
+        product: product,
+      };
+    } else {
+      return `Product with id ${id} was not found`;
+    }
+  }
 }
