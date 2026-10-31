@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Products } from './entities/products.entity.js';
 import { CreateDateColumn, Repository } from 'typeorm';
@@ -70,13 +74,13 @@ export class ProductsService {
       },
     });
 
-    if (product) {
+    if (!product) {
+      throw new NotFoundException(`Product with id ${id} not found`);
+    } else {
       return {
         message: `Product with id ${id} found`,
         product: product,
       };
-    } else {
-      return `Product with id ${id} was not found`;
     }
   }
 }
