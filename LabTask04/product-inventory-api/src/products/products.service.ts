@@ -25,4 +25,27 @@ export class ProductsService {
       );
     }
   }
+
+  async findAll(): Promise<{
+    message: string;
+    count: number;
+    products: Products[];
+  }> {
+    const products = await this.productsRepo.find({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        price: true,
+        stock: true,
+        category: true,
+      },
+    });
+
+    return {
+      message: `${products.length} products returned successfully`,
+      count: products.length,
+      products: products,
+    };
+  }
 }

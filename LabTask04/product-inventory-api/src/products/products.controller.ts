@@ -11,4 +11,13 @@ export class ProductsController {
   async createProduct(@Body() product: CreateProductDto): Promise<string> {
     return await this.productsService.createProduct(product);
   }
+
+  @Get('findAllProducts')
+  async findAllProducts(): Promise<{
+    message: string;
+    count: number;
+    products: Products[];
+  }> {
+    return await this.productsService.findAll();
+  }
 }
