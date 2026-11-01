@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Products } from './entities/products.entity.js';
-import { CreateDateColumn, Repository } from 'typeorm';
+import { CreateDateColumn, ILike, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
 import { PartialUpdateProductDto } from './dto/partial-update-product.dto.js';
@@ -152,14 +152,93 @@ export class ProductsService {
       } else {
         throw new NotFoundException(`Product with id ${id} was not found`);
       }
-    } catch {
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new BadRequestException('Something went wrong');
     }
   }
 
-  findProductByCatefory() {}
+  async findProductByCatefory(
+    cat: string,
+  ): Promise<{ message: string; count: number; data: Products[] } | string> {
+    try {
+      const product = await this.productsRepo.find({
+        where: {
+          category: cat,
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          price: true,
+          stock: true,
+          category: true,
+        },
+        // order: {
+        //   id: 'ASC',
+        // },
+      });
+      if (product) {
+        return {
+          message: `All products of category: ${cat} fetched`,
+          count: product.length,
+          data: product,
+        };
+      } else {
+        throw new NotFoundException(
+          `No products with category: ${cat} were found`,
+        );
+      }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new BadRequestException('Something went wrong');
+    }
+  }
 
-  searchProduct() {}
+  async searchProduct(
+    keyword: string,
+  ): Promise<{ message: string; count: number; data: Products[] } | string> {
+    try {
+      const product = await this.productsRepo.find({
+        where: {
+          name: ILike(`%${keyword}%`),
+        },
+
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          price: true,
+          stock: true,
+          category: true,
+        },
+      });
+
+      if (product) {
+        return {
+          message: `${product.length} products found`,
+          count: product.length,
+          data: product,
+        };
+      } else {
+        throw new NotFoundException(
+          `No products found with the keyword: ${keyword}`,
+        );
+      }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new BadRequestException(
+        'Could not find product. Something went wrong',
+      );
+    }
+  }
 
   toggleActive() {}
 }

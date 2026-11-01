@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
@@ -59,5 +60,19 @@ export class ProductsController {
   @Delete('/:id')
   async removeProduct(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.productsService.removeProduct(id);
+  }
+
+  @Get('category/:cat')
+  async findProductByCategory(
+    @Param('cat') cat: string,
+  ): Promise<{ message: string; count: number; data: Products[] } | string> {
+    return this.productsService.findProductByCatefory(cat);
+  }
+
+  @Get('search')
+  async searchProduct(
+    @Query('keyword') keyword: string,
+  ): Promise<{ message: string; count: number; data: Products[] } | string> {
+    return this.productsService.searchProduct(keyword);
   }
 }
