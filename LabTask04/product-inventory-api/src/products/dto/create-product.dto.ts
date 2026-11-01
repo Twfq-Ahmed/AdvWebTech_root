@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsIn,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -12,9 +13,15 @@ import {
 import { Type } from 'class-transformer';
 
 export class CreateProductDto {
-  @IsString()
+  @IsInt()
+  @IsPositive()
+  @Type(() => Number)
   @IsNotEmpty()
   id: number;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
   @IsString()
   @IsOptional()

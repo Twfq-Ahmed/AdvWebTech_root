@@ -10,6 +10,7 @@ import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
 import { PartialUpdateProductDto } from './dto/partial-update-product.dto.js';
 import { stringify } from 'querystring';
+import { repl } from '@nestjs/core';
 
 @Injectable()
 export class ProductsService {
@@ -113,4 +114,41 @@ export class ProductsService {
       throw new BadRequestException('Failed due to DB error');
     }
   }
+
+  async replaceProduct(
+    id: number,
+    replaceProduct: UpdateProductDto,
+  ): Promise<{ message: string; data: Products } | string> {
+    try {
+      // const product = await this.findOneProduct(id);
+      // if(!product){
+      //   throw new BadRequestException('Product not found');
+      // }
+
+      const res = (await this.productsRepo.update(id, replaceProduct)).affected;
+      if (res != null && res > 0) {
+        const rep = await this.findOneProduct(id);
+        if (typeof rep === 'string') {
+          return rep;
+        } else {
+          return {
+            message: `Product with id ${id} was successfully replaced`,
+            data: rep.product,
+          };
+        }
+      } else {
+        return `Product with id ${id} not found`;
+      }
+    } catch {
+      throw new BadRequestException('Failed due to DB error');
+    }
+  }
+
+  removeProduct() {}
+
+  findProductByCatefory() {}
+
+  searchProduct() {}
+
+  toggleActive() {}
 }

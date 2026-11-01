@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { ProductsService } from './products.service.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { Products } from './entities/products.entity.js';
 import { PartialUpdateProductDto } from './dto/partial-update-product.dto.js';
+import { UpdateProductDto } from './dto/update-product.dto.js';
 
 @Controller('products')
 export class ProductsController {
@@ -35,5 +36,13 @@ export class ProductsController {
     @Body() product: PartialUpdateProductDto,
   ): Promise<{ message: string; data: Products } | string> {
     return this.productsService.updateProduct(id, product);
+  }
+
+  @Put('/:id')
+  async replaceProduct(
+    @Param('id') id: number,
+    @Body() product: UpdateProductDto,
+  ): Promise<{ message: string; data: Products } | string> {
+    return this.productsService.replaceProduct(id, product);
   }
 }
