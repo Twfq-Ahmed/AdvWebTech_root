@@ -7,6 +7,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Products } from './entities/products.entity.js';
 import { CreateDateColumn, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto.js';
+import { UpdateProductDto } from './dto/update-product.dto.js';
+import { PartialUpdateProductDto } from './dto/partial-update-product.dto.js';
+import { stringify } from 'querystring';
 
 @Injectable()
 export class ProductsService {
@@ -81,6 +84,33 @@ export class ProductsService {
         message: `Product with id ${id} found`,
         product: product,
       };
+    }
+  }
+
+  async updateProduct(
+    id: number,
+    partialUpdateProductDto: PartialUpdateProductDto,
+  ): Promise<{ message: string; data: Products } | string> {
+    try {
+      // const product = await this.findOneProduct(id);
+      const res = (await this.productsRepo.update(id, partialUpdateProductDto))
+        .affected;
+
+      if (res != null && res > 0) {
+        const u = await this.findOneProduct(id);
+        if (typeof u === 'string') {
+          return u;
+        } else {
+          return {
+            message: 'Product successfully updated',
+            data: u.product,
+          };
+        }
+      } else {
+        return `Product with id ${id} not found`;
+      }
+    } catch {
+      throw new BadRequestException('Failed due to DB error');
     }
   }
 }
