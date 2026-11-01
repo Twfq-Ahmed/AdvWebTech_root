@@ -75,4 +75,11 @@ export class ProductsController {
   ): Promise<{ message: string; count: number; data: Products[] } | string> {
     return this.productsService.searchProduct(keyword);
   }
+
+  @Patch('/:id/toggle')
+  async toggleActive(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ message: string; data: Products }> {
+    return this.productsService.toggleActive(id);
+  }
 }

@@ -240,5 +240,38 @@ export class ProductsService {
     }
   }
 
-  toggleActive() {}
+  async toggleActive(id: number): Promise<{ message: string; data: Products }> {
+    try {
+      const product = await this.productsRepo.findOne({
+        where: {
+          id: id,
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          price: true,
+          stock: true,
+          category: true,
+          isActive: true,
+        },
+      });
+
+      if (product) {
+        product.isActive = !product.isActive;
+        const status = await this.productsRepo.save(product);
+        return {
+          message: `isActive status: ${product.isActive} for product with id: ${id}`,
+          data: product,
+        };
+      } else {
+        throw new NotFoundException(`Product with id ${id} not found`);
+      }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new BadRequestException('Something went wrong');
+    }
+  }
 }
