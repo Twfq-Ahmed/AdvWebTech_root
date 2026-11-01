@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Put,
@@ -41,7 +42,7 @@ export class ProductsController {
 
   @Patch('/:id')
   async updateProduct(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() product: PartialUpdateProductDto,
   ): Promise<{ message: string; data: Products } | string> {
     return this.productsService.updateProduct(id, product);
@@ -49,14 +50,14 @@ export class ProductsController {
 
   @Put('/:id')
   async replaceProduct(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() product: UpdateProductDto,
   ): Promise<{ message: string; data: Products } | string> {
     return this.productsService.replaceProduct(id, product);
   }
 
   @Delete('/:id')
-  async removeProduct(@Param('id') id: number): Promise<string> {
+  async removeProduct(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.productsService.removeProduct(id);
   }
 }
