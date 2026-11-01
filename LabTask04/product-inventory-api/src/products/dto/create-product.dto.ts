@@ -13,12 +13,6 @@ import {
 import { Type } from 'class-transformer';
 
 export class CreateProductDto {
-  @IsInt()
-  @IsPositive()
-  @Type(() => Number)
-  @IsNotEmpty()
-  id: number;
-
   @IsString()
   @IsNotEmpty()
   name: string;

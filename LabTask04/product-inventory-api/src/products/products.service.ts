@@ -144,7 +144,18 @@ export class ProductsService {
     }
   }
 
-  removeProduct() {}
+  async removeProduct(id: number): Promise<string> {
+    try {
+      const res = (await this.productsRepo.delete(id)).affected;
+      if (res != null && res > 0) {
+        return `Product with id ${id} was deleted`;
+      } else {
+        throw new NotFoundException(`Product with id ${id} was not found`);
+      }
+    } catch {
+      throw new BadRequestException('Something went wrong');
+    }
+  }
 
   findProductByCatefory() {}
 
